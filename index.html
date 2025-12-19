@@ -1,1 +1,1373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ვალი</title>
+    
+    <!-- Firebase SDK for Realtime Database -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+    
+    <script>
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAVQH94ZTgOGe30Pp1E3DPR4NyfnFrqoAM",
+            authDomain: "vali-a4b47.firebaseapp.com",
+            databaseURL: "https://vali-a4b47-default-rtdb.firebaseio.com",
+            projectId: "vali-a4b47",
+            storageBucket: "vali-a4b47.firebasestorage.app",
+            messagingSenderId: "939306667026",
+            appId: "1:939306667026:web:d8bf78cf6c0c6209d11ccb",
+            measurementId: "G-9JJ56YR1BG"
+        };
 
+        // Initialize Firebase
+        try {
+            // Initialize Firebase with compatibility version
+            firebase.initializeApp(firebaseConfig);
+            const database = firebase.database();
+            
+            // Make Firebase available globally
+            window.firebaseApp = firebase.app();
+            window.database = database;
+            console.log('Firebase Realtime Database initialized successfully');
+        } catch (error) {
+            console.error('Firebase initialization error:', error);
+            window.firebaseApp = null;
+            window.database = null;
+        }
+    </script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        
+.container {
+    max-width: 100%; /* Changed from 1200px to 100% */
+    margin: 0 auto;
+    padding: 0; /* Changed from 20px to 0 */
+}
+
+        
+        /* Login Page Styles */
+        #login-page {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+        }
+        
+        .login-form {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 400px;
+        }
+        
+        .login-form h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: #6a11cb;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            background: #5a0db0;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn-block {
+            display: block;
+            width: 100%;
+        }
+        
+        /* Dashboard Styles */
+        #dashboard {
+            display: none;
+        }
+        
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 10px; /* Added horizontal padding */
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 30px;
+}
+        
+        .header h1 {
+            color: #6a11cb;
+        }
+        
+        .sign-out-btn {
+            background: #ff4757;
+        }
+        
+        .sign-out-btn:hover {
+            background: #ff3742;
+        }
+        
+.total-summary {
+    background: white;
+    padding: 25px 20px; /* Added horizontal padding */
+    border-radius: 0; /* Changed from 10px to 0 */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    margin-bottom: 30px;
+}
+        
+        .total-summary h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #333;
+        }
+        
+        .currency-totals {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .currency-total {
+            text-align: center;
+            flex: 1;
+            min-width: 180px;
+        }
+        
+        .currency-label {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #555;
+        }
+        
+        .currency-amount {
+            font-size: 36px;
+            font-weight: bold;
+            color: #6a11cb;
+        }
+        
+.input-section {
+    background: white;
+    padding: 25px 20px; /* Added horizontal padding */
+    border-radius: 0; /* Changed from 10px to 0 */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    margin-bottom: 30px;
+}
+        
+        .input-section h3 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        .input-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .input-field {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .input-field label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .input-field input, .input-field select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        
+        .add-money-btn {
+            margin-top: 10px;
+        }
+        
+.history-section {
+    background: white;
+    padding: 25px 20px; /* Added horizontal padding */
+    border-radius: 0; /* Changed from 10px to 0 */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    text-align: center;
+}
+        
+        .history-section h3 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .history-table th, .history-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .history-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+        }
+        
+        .history-table tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .amount-cell {
+            font-weight: 600;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .details-btn {
+            background: #3498db;
+            padding: 6px 12px;
+            font-size: 14px;
+        }
+        
+        .details-btn:hover {
+            background: #2980b9;
+        }
+        
+        .returned-btn {
+            background: #27ae60;
+            padding: 6px 12px;
+            font-size: 14px;
+        }
+        
+        .returned-btn:hover {
+            background: #219653;
+        }
+        
+        .delete-btn {
+            background: #ff4757;
+            padding: 6px 12px;
+            font-size: 14px;
+        }
+        
+        .delete-btn:hover {
+            background: #ff3742;
+        }
+        
+        .returned-row {
+            opacity: 0.6;
+            background-color: #f0fff0;
+        }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background: white;
+            width: 90%;
+            max-width: 800px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transform: scale(0.7);
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .modal-content.show {
+            transform: scale(1);
+            opacity: 1;
+        }
+        
+        .modal-header {
+            padding: 20px;
+            background: #6a11cb;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-header h3 {
+            margin: 0;
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;
+        }
+        
+        .close-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: white;
+        }
+        
+        .modal-body {
+            padding: 20px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        
+        .details-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .details-table th, .details-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .details-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+        }
+        
+        /* Custom Popup Styles */
+        .custom-popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1200;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .popup-content {
+            background: white;
+            width: 90%;
+            max-width: 400px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transform: scale(0.7);
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .popup-content.show {
+            transform: scale(1);
+            opacity: 1;
+        }
+        
+        .popup-header {
+            padding: 15px 20px;
+            background: #6a11cb;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .popup-header h3 {
+            margin: 0;
+            font-size: 18px;
+        }
+        
+        .popup-close-btn {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 25px;
+            height: 25px;
+        }
+        
+        .popup-close-btn svg {
+            width: 16px;
+            height: 16px;
+            fill: white;
+        }
+        
+        .popup-body {
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .popup-footer {
+            padding: 15px 20px;
+            display: flex;
+            justify-content: flex-end;
+            border-top: 1px solid #eee;
+        }
+        
+        .popup-ok-btn {
+            background: #6a11cb;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .popup-ok-btn:hover {
+            background: #5a0db0;
+        }
+        
+        /* Full History Modal Styles */
+        .full-history-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1100;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .full-history-content {
+            background: white;
+            width: 90%;
+            max-width: 900px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transform: scale(0.7);
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .full-history-content.show {
+            transform: scale(1);
+            opacity: 1;
+        }
+        
+        .full-history-header {
+            padding: 20px;
+            background: #6a11cb;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .full-history-header h3 {
+            margin: 0;
+        }
+        
+        .full-history-body {
+            padding: 20px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        
+        .full-history-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        .full-history-table th, .full-history-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .full-history-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+        }
+        
+        .full-history-total {
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        
+        .currency-total-item {
+            display: inline-block;
+            margin: 0 15px;
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .input-row {
+                flex-direction: column;
+            }
+            
+            .input-field {
+                min-width: 100%;
+            }
+            
+            .currency-totals {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .currency-total {
+                min-width: 100%;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .history-table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            .currency-total-item {
+                display: block;
+                margin: 5px 0;
+            }
+        }
+        
+        /* Sync Status */
+        .sync-status {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 14px;
+            z-index: 100;
+        }
+        
+        .sync-online {
+            background: #27ae60;
+            color: white;
+        }
+        
+        .sync-offline {
+            background: #e74c3c;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sync Status Indicator -->
+    <div id="sync-status" class="sync-status sync-offline">Offline</div>
+    
+    <!-- Login Page -->
+    <div id="login-page">
+        <div class="login-form">
+            <h2>ვალების აღრიცხვა ავტორიზაცია</h2>
+            <div class="form-group">
+                <label for="username">მომხმარებელი</label>
+                <input type="text" id="username" placeholder="მომხმარებელი">
+            </div>
+            <div class="form-group">
+                <label for="password">პაროლი</label>
+                <input type="password" id="password" placeholder="პაროლი">
+            </div>
+            <button id="login-btn" class="btn btn-block">შესვლა</button>
+        </div>
+    </div>
+    
+    <!-- Dashboard -->
+    <div id="dashboard" class="container">
+        <div class="header">
+            <h1>აღრიცხვის მთავარი გვერდი</h1>
+            <button id="sign-out-btn" class="btn sign-out-btn">გასვლა</button>
+        </div>
+        
+        <div class="total-summary">
+            <h2>ვალების რაოდენობა ვალუტების მიხედვით</h2>
+            <div class="currency-totals">
+                <div class="currency-total">
+                    <div class="currency-label">$</div>
+                    <div class="currency-amount" id="total-usd">$0.00</div>
+                </div>
+                <div class="currency-total">
+                    <div class="currency-label">€</div>
+                    <div class="currency-amount" id="total-eur">€0.00</div>
+                </div>
+                <div class="currency-total">
+                    <div class="currency-label">₾</div>
+                    <div class="currency-amount" id="total-gel">₾0.00</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="input-section">
+            <h3>ვალის დამატება</h3>
+            <div class="input-row">
+                <div class="input-field">
+                    <label for="amount">თანხა</label>
+                    <input type="number" id="amount" placeholder="თანხის შეტანა">
+                </div>
+                <div class="input-field">
+                    <label for="currency">ვალუტა</label>
+                    <select id="currency">
+                        <option value="USD">USD ($)</option>
+                        <option value="EUR">EUR (€)</option>
+                        <option value="GEL">GEL (₾)</option>
+                    </select>
+                </div>
+                <div class="input-field">
+                    <label for="person">მევალე</label>
+                    <input type="text" id="person" placeholder="სახელი">
+                </div>
+                <div class="input-field">
+                    <label for="description">აღწერა</label>
+                    <input type="text" id="description" placeholder="აღწერის დამატება">
+                </div>
+            </div>
+            <button id="add-money-btn" class="btn add-money-btn">დამატება</button>
+        </div>
+        
+        <div class="history-section">
+            <h3>სრული ისტორია</h3>
+            <button id="open-full-history-btn" class="btn">გახსენი სრული ისტორია</button>
+        </div>
+    </div>
+    
+    <!-- Details Modal -->
+    <div id="details-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>ვალების დეტალები - <span id="modal-person-name"></span> (<span id="modal-total-amount"></span>)</h3>
+                <button class="close-btn">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="details-table">
+                    <thead>
+                        <tr>
+                            <th>თარიღი</th>
+                            <th>თანხა</th>
+                            <th>აღწერა</th>
+                            <th>სტატუსი</th>
+                            <th>ქმედება</th>
+                        </tr>
+                    </thead>
+                    <tbody id="details-table-body">
+                        <!-- Table rows will be added here dynamically -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Full History Modal -->
+    <div id="full-history-modal" class="full-history-modal">
+        <div class="full-history-content">
+            <div class="full-history-header">
+                <h3>სრული ისტორია</h3>
+                <button class="close-btn">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="full-history-body">
+                <div class="full-history-total">
+                    <span id="full-history-total-amount">სრული: $0.00, €0.00, ₾0.00</span>
+                </div>
+                <table class="full-history-table">
+                    <thead>
+                        <tr>
+                            <th>თარიღი</th>
+                            <th>თანხა</th>
+                            <th>პიროვნება</th>
+                            <th>აღწერა</th>
+                            <th>სტატუსი</th>
+                            <th>ქმედება</th>
+                        </tr>
+                    </thead>
+                    <tbody id="full-history-table-body">
+                        <!-- Table rows will be added here dynamically -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Custom Popup -->
+    <div id="custom-popup" class="custom-popup">
+        <div class="popup-content">
+            <div class="popup-header">
+                <h3 id="popup-title">შეტყობინება</h3>
+                <button class="popup-close-btn">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="popup-body">
+                <p id="popup-message">ეს არის შეტყობინება.</p>
+            </div>
+            <div class="popup-footer">
+                <button id="popup-ok-btn" class="popup-ok-btn">თანხმობა</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // DOM Elements
+        const loginPage = document.getElementById('login-page');
+        const dashboard = document.getElementById('dashboard');
+        const loginBtn = document.getElementById('login-btn');
+        const signOutBtn = document.getElementById('sign-out-btn');
+        const totalUsd = document.getElementById('total-usd');
+        const totalEur = document.getElementById('total-eur');
+        const totalGel = document.getElementById('total-gel');
+        const amountInput = document.getElementById('amount');
+        const currencySelect = document.getElementById('currency');
+        const personInput = document.getElementById('person');
+        const descriptionInput = document.getElementById('description');
+        const addMoneyBtn = document.getElementById('add-money-btn');
+        const openFullHistoryBtn = document.getElementById('open-full-history-btn');
+        const detailsModal = document.getElementById('details-modal');
+        const closeModalBtns = document.querySelectorAll('.close-btn');
+        const modalPersonName = document.getElementById('modal-person-name');
+        const modalTotalAmount = document.getElementById('modal-total-amount');
+        const detailsTableBody = document.getElementById('details-table-body');
+        const fullHistoryModal = document.getElementById('full-history-modal');
+        const fullHistoryTableBody = document.getElementById('full-history-table-body');
+        const fullHistoryTotalAmount = document.getElementById('full-history-total-amount');
+        const customPopup = document.getElementById('custom-popup');
+        const popupTitle = document.getElementById('popup-title');
+        const popupMessage = document.getElementById('popup-message');
+        let popupOkBtn = document.getElementById('popup-ok-btn');
+        const syncStatus = document.getElementById('sync-status');
+        
+        // State
+        let moneyOwed = JSON.parse(localStorage.getItem('moneyOwed')) || [];
+        let currentUser = localStorage.getItem('currentUser');
+        let isOnline = false;
+        
+        // Currency symbols
+        const currencySymbols = {
+            'USD': '$',
+            'EUR': '€',
+            'GEL': '₾'
+        };
+        
+        // Check if user is already logged in
+        if (currentUser) {
+            showDashboard();
+            initializeFirebase();
+        }
+        
+        // Event Listeners
+        loginBtn.addEventListener('click', handleLogin);
+        signOutBtn.addEventListener('click', handleSignOut);
+        addMoneyBtn.addEventListener('click', addMoney);
+        openFullHistoryBtn.addEventListener('click', showFullHistory);
+        
+        closeModalBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const modal = e.target.closest('.modal, .full-history-modal');
+                if (modal) {
+                    hideModal(modal);
+                }
+            });
+        });
+        
+        popupCloseBtn.addEventListener('click', () => {
+            hideModal(customPopup);
+        });
+        
+        // Close modal when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target === detailsModal) {
+                hideModal(detailsModal);
+            }
+            if (e.target === fullHistoryModal) {
+                hideModal(fullHistoryModal);
+            }
+            if (e.target === customPopup) {
+                hideModal(customPopup);
+            }
+        });
+        
+        // Firebase Realtime Database Functions
+        async function initializeFirebase() {
+            try {
+                // Check if Firebase is available
+                if (window.database) {
+                    console.log('Firebase is available, setting up connection...');
+                    isOnline = true;
+                    syncStatus.textContent = 'Online';
+                    syncStatus.className = 'sync-status sync-online';
+                    
+                    // Test Firebase connection
+                    try {
+                        const testRef = window.database.ref('connectionTest');
+                        await testRef.set({
+                            timestamp: Date.now(),
+                            message: 'Connection test'
+                        });
+                        await testRef.remove();
+                        console.log('Firebase connection test successful');
+                    } catch (testError) {
+                        console.error('Firebase connection test failed:', testError);
+                        throw testError;
+                    }
+                    
+                    // Set up real-time listener for debts
+                    const debtsRef = window.database.ref('debts');
+                    debtsRef.on('value', (snapshot) => {
+                        console.log('Firebase data received:', snapshot.val());
+                        const data = snapshot.val();
+                        moneyOwed = [];
+                        if (data) {
+                            Object.keys(data).forEach(key => {
+                                moneyOwed.push({
+                                    id: key,
+                                    ...data[key]
+                                });
+                            });
+                        } else {
+                            console.log('No data in Firebase');
+                        }
+                        updateTotalAmounts();
+                        showPopup('სინქრონიზაცია', 'მონაცემები განახლდა');
+                    }, (error) => {
+                        console.error('Firebase listener error:', error);
+                        isOnline = false;
+                        syncStatus.textContent = 'Offline';
+                        syncStatus.className = 'sync-status sync-offline';
+                    });
+                    
+                    // Load initial data from Firebase
+                    await loadDataFromFirebase();
+                    return true;
+                } else {
+                    throw new Error('Firebase not loaded');
+                }
+            } catch (error) {
+                console.log('Firebase not available, using local storage:', error);
+                isOnline = false;
+                syncStatus.textContent = 'Offline';
+                syncStatus.className = 'sync-status sync-offline';
+                return false;
+            }
+        }
+        
+        async function loadDataFromFirebase() {
+            if (!isOnline) return;
+            
+            try {
+                console.log('Loading data from Firebase...');
+                const debtsRef = window.database.ref('debts');
+                const snapshot = await debtsRef.once('value');
+                const data = snapshot.val();
+                console.log('Firebase data loaded:', data);
+                
+                moneyOwed = [];
+                if (data) {
+                    Object.keys(data).forEach(key => {
+                        moneyOwed.push({
+                            id: key,
+                            ...data[key]
+                        });
+                    });
+                    console.log('Processed moneyOwed:', moneyOwed);
+                } else {
+                    console.log('No data found in Firebase');
+                    // If no data in Firebase, push local data to Firebase
+                    if (moneyOwed.length > 0) {
+                        console.log('Pushing local data to Firebase...');
+                        await saveDataToFirebase();
+                    }
+                }
+                
+                // Save to localStorage as backup
+                localStorage.setItem('moneyOwed', JSON.stringify(moneyOwed));
+                updateTotalAmounts();
+            } catch (error) {
+                console.error('Error loading from Firebase:', error);
+                // Fallback to localStorage
+                moneyOwed = JSON.parse(localStorage.getItem('moneyOwed')) || [];
+            }
+        }
+        
+        async function saveDataToFirebase() {
+            if (!isOnline) return;
+            
+            try {
+                const debtsRef = window.database.ref('debts');
+                
+                // Convert array to object for Firebase
+                const firebaseData = {};
+                moneyOwed.forEach(entry => {
+                    firebaseData[entry.id] = {
+                        amount: entry.amount,
+                        currency: entry.currency,
+                        person: entry.person,
+                        description: entry.description,
+                        date: entry.date,
+                        returned: entry.returned || false
+                    };
+                });
+                
+                console.log('Saving to Firebase:', firebaseData);
+                await debtsRef.set(firebaseData);
+                console.log('Data saved to Firebase successfully');
+            } catch (error) {
+                console.error('Error saving to Firebase:', error);
+                throw error;
+            }
+        }
+        
+        async function saveData() {
+            console.log('Saving data...');
+            // Always save to localStorage
+            localStorage.setItem('moneyOwed', JSON.stringify(moneyOwed));
+            console.log('Data saved to localStorage');
+            
+            // If online, sync to Firebase
+            if (isOnline) {
+                try {
+                    await saveDataToFirebase();
+                } catch (error) {
+                    console.error('Error syncing to Firebase:', error);
+                    isOnline = false;
+                    syncStatus.textContent = 'Offline';
+                    syncStatus.className = 'sync-status sync-offline';
+                }
+            }
+        }
+        
+        async function addMoneyToFirebase(entry) {
+            if (!isOnline) return null;
+            
+            try {
+                const debtsRef = window.database.ref('debts');
+                const newDebtRef = debtsRef.push();
+                const newEntry = {
+                    amount: entry.amount,
+                    currency: entry.currency,
+                    person: entry.person,
+                    description: entry.description,
+                    date: entry.date,
+                    returned: entry.returned || false
+                };
+                
+                console.log('Adding to Firebase:', newEntry);
+                await newDebtRef.set(newEntry);
+                console.log('Added to Firebase with ID:', newDebtRef.key);
+                return newDebtRef.key;
+            } catch (error) {
+                console.error('Error adding to Firebase:', error);
+                return null;
+            }
+        }
+        
+        async function updateMoneyInFirebase(id, updates) {
+            if (!isOnline) return;
+            
+            try {
+                const debtRef = window.database.ref('debts/' + id);
+                console.log('Updating Firebase entry:', id, updates);
+                await debtRef.update(updates);
+            } catch (error) {
+                console.error('Error updating in Firebase:', error);
+            }
+        }
+        
+        async function deleteMoneyFromFirebase(id) {
+            if (!isOnline) return;
+            
+            try {
+                const debtRef = window.database.ref('debts/' + id);
+                console.log('Deleting from Firebase:', id);
+                await debtRef.remove();
+            } catch (error) {
+                console.error('Error deleting from Firebase:', error);
+            }
+        }
+        
+        // Functions
+        async function handleLogin() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            if (username === 'alex' && password === '2911') {
+                currentUser = username;
+                localStorage.setItem('currentUser', currentUser);
+                
+                // Initialize Firebase after successful login
+                await initializeFirebase();
+                showDashboard();
+            } else {
+                showPopup('შეცდომა', 'არასწორი მომხმარებელი ან პაროლი');
+            }
+        }
+        
+        function handleSignOut() {
+            currentUser = null;
+            localStorage.removeItem('currentUser');
+            showLoginPage();
+        }
+        
+        function showLoginPage() {
+            loginPage.style.display = 'flex';
+            dashboard.style.display = 'none';
+        }
+        
+        function showDashboard() {
+            loginPage.style.display = 'none';
+            dashboard.style.display = 'block';
+            updateTotalAmounts();
+        }
+        
+        async function addMoney() {
+            const amount = parseFloat(amountInput.value);
+            const currency = currencySelect.value;
+            const person = personInput.value.trim();
+            const description = descriptionInput.value.trim();
+            
+            if (!amount || amount <= 0) {
+                showPopup('შეცდომა', 'შეიტანეთ სწორი თანხა');
+                return;
+            }
+            
+            if (!person) {
+                showPopup('შეცდომა', 'შეიყვანეთ მევალე');
+                return;
+            }
+            
+            const newEntry = {
+                id: Date.now().toString(),
+                amount: amount,
+                currency: currency,
+                person: person,
+                description: description,
+                date: new Date().toISOString().split('T')[0],
+                returned: false
+            };
+            
+            // If online, add to Firebase and get the real ID
+            if (isOnline) {
+                const firebaseId = await addMoneyToFirebase(newEntry);
+                if (firebaseId) {
+                    newEntry.id = firebaseId;
+                }
+            }
+            
+            moneyOwed.push(newEntry);
+            await saveData();
+            updateTotalAmounts();
+            
+            // Clear inputs
+            amountInput.value = '';
+            personInput.value = '';
+            descriptionInput.value = '';
+            
+            showPopup('წარმატება', 'ვალი წარმატებით დაემატა');
+        }
+        
+        function updateTotalAmounts() {
+            let totalUSD = 0;
+            let totalEUR = 0;
+            let totalGEL = 0;
+            
+            moneyOwed.forEach(entry => {
+                if (!entry.returned) {
+                    if (entry.currency === 'USD') totalUSD += entry.amount;
+                    else if (entry.currency === 'EUR') totalEUR += entry.amount;
+                    else if (entry.currency === 'GEL') totalGEL += entry.amount;
+                }
+            });
+            
+            totalUsd.textContent = `$${totalUSD.toFixed(2)}`;
+            totalEur.textContent = `€${totalEUR.toFixed(2)}`;
+            totalGel.textContent = `₾${totalGEL.toFixed(2)}`;
+        }
+        
+        function showDetails(person) {
+            modalPersonName.textContent = person;
+            
+            // Calculate total debt for this person
+            const personEntries = moneyOwed.filter(item => item.person === person);
+            let totalDebt = 0;
+            
+            personEntries.forEach(entry => {
+                if (!entry.returned) {
+                    totalDebt += entry.amount;
+                }
+            });
+            
+            modalTotalAmount.textContent = `სრული: $${totalDebt.toFixed(2)}`;
+            
+            // Clear previous table data
+            detailsTableBody.innerHTML = '';
+            
+            if (personEntries.length === 0) {
+                detailsTableBody.innerHTML = `
+                    <tr>
+                        <td colspan="5" style="text-align: center; padding: 20px;">
+                            ჩანაწერი ვერ მოიძებნა ${person}.
+                        </td>
+                    </tr>
+                `;
+            } else {
+                // Sort by date (newest first)
+                const sortedEntries = [...personEntries].sort((a, b) => new Date(b.date) - new Date(a.date));
+                
+                sortedEntries.forEach(item => {
+                    const row = document.createElement('tr');
+                    if (item.returned) {
+                        row.classList.add('returned-row');
+                    }
+                    
+                    row.innerHTML = `
+                        <td>${formatDate(item.date)}</td>
+                        <td>${currencySymbols[item.currency]}${item.amount.toFixed(2)}</td>
+                        <td>${item.description || 'აღწერის გარეშე'}</td>
+                        <td>${item.returned ? 'დაბრუნდა' : 'ვალია'}</td>
+                        <td>
+                            <button class="btn delete-btn" onclick="deleteEntry('${item.id}')">წაშლა</button>
+                        </td>
+                    `;
+                    
+                    detailsTableBody.appendChild(row);
+                });
+            }
+            
+            showModal(detailsModal);
+        }
+        
+        function showFullHistory() {
+            // Clear previous table data
+            fullHistoryTableBody.innerHTML = '';
+            
+            if (moneyOwed.length === 0) {
+                fullHistoryTableBody.innerHTML = `
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 30px;">
+                            ვალები ვერ მოიძებნა
+                        </td>
+                    </tr>
+                `;
+            } else {
+                // Sort by date (newest first)
+                const sortedEntries = [...moneyOwed].sort((a, b) => new Date(b.date) - new Date(a.date));
+                
+                sortedEntries.forEach(entry => {
+                    const row = document.createElement('tr');
+                    if (entry.returned) {
+                        row.classList.add('returned-row');
+                    }
+                    
+                    row.innerHTML = `
+                        <td>${formatDate(entry.date)}</td>
+                        <td class="amount-cell">${currencySymbols[entry.currency]}${entry.amount.toFixed(2)}</td>
+                        <td>${entry.person}</td>
+                        <td>${entry.description || '-'}</td>
+                        <td>${entry.returned ? 'დაბრუნდა' : 'ვალია'}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn details-btn" onclick="showDetailsFromFullHistory('${entry.person}')">დეტალები</button>
+                                ${!entry.returned ? 
+                                    `<button class="btn returned-btn" onclick="markAsReturned('${entry.id}')">დაბრუნდა</button>` : 
+                                    ''
+                                }
+                                <button class="btn delete-btn" onclick="deleteEntry('${entry.id}')">წაშლა</button>
+                            </div>
+                        </td>
+                    `;
+                    
+                    fullHistoryTableBody.appendChild(row);
+                });
+            }
+            
+            // Calculate total debt by currency
+            let totalUSD = 0;
+            let totalEUR = 0;
+            let totalGEL = 0;
+            
+            moneyOwed.forEach(entry => {
+                if (!entry.returned) {
+                    if (entry.currency === 'USD') totalUSD += entry.amount;
+                    else if (entry.currency === 'EUR') totalEUR += entry.amount;
+                    else if (entry.currency === 'GEL') totalGEL += entry.amount;
+                }
+            });
+            
+            fullHistoryTotalAmount.innerHTML = `
+                <span class="currency-total-item">$${totalUSD.toFixed(2)}</span>
+                <span class="currency-total-item">€${totalEUR.toFixed(2)}</span>
+                <span class="currency-total-item">₾${totalGEL.toFixed(2)}</span>
+            `;
+            
+            showModal(fullHistoryModal);
+        }
+        
+        function showDetailsFromFullHistory(person) {
+            // Hide full history modal first
+            hideModal(fullHistoryModal);
+            
+            // Then show details modal after a short delay
+            setTimeout(() => {
+                showDetails(person);
+            }, 300);
+        }
+        
+        async function markAsReturned(id) {
+            const entry = moneyOwed.find(item => item.id === id);
+            if (entry) {
+                entry.returned = true;
+                await updateMoneyInFirebase(id, { returned: true });
+                await saveData();
+                updateTotalAmounts();
+                showFullHistory();
+                showPopup('წარმატება', 'ვალი მონიშნულია როგორც დაბრუნებული');
+            }
+        }
+        
+        async function deleteEntry(id) {
+            showPopup('დადასტურება', 'ნამდვილად გსურთ ჩანაწერის წაშლა?', async () => {
+                moneyOwed = moneyOwed.filter(item => item.id !== id);
+                await deleteMoneyFromFirebase(id);
+                await saveData();
+                updateTotalAmounts();
+                hideModal(detailsModal);
+                hideModal(fullHistoryModal);
+                showPopup('წარმატება', 'ჩანაწერი წარმატებით წაიშალა');
+            });
+        }
+        
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'short', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString(undefined, options);
+        }
+        
+        // Modal functions
+        function showModal(modal) {
+            modal.style.display = 'flex';
+            setTimeout(() => {
+                const content = modal.querySelector('.modal-content, .full-history-content, .popup-content');
+                content.classList.remove('show');
+                // Force reflow
+                void content.offsetWidth;
+                content.classList.add('show');
+            }, 10);
+        }
+        
+        function hideModal(modal) {
+            const content = modal.querySelector('.modal-content, .full-history-content, .popup-content');
+            content.classList.remove('show');
+            setTimeout(() => {
+                modal.style.display = 'none';
+            }, 300);
+        }
+        
+        // Custom popup function
+        function showPopup(title, message, callback = null) {
+            popupTitle.textContent = title;
+            popupMessage.textContent = message;
+            
+            showModal(customPopup);
+            
+            // Remove previous event listeners
+            const newOkBtn = popupOkBtn.cloneNode(true);
+            popupOkBtn.parentNode.replaceChild(newOkBtn, popupOkBtn);
+            
+            // Add new event listener
+            newOkBtn.addEventListener('click', () => {
+                hideModal(customPopup);
+                if (callback) {
+                    callback();
+                }
+            });
+            
+            // Update reference
+            popupOkBtn = newOkBtn;
+        }
+        
+        // Make functions available globally for onclick handlers
+        window.showDetails = showDetails;
+        window.showDetailsFromFullHistory = showDetailsFromFullHistory;
+        window.markAsReturned = markAsReturned;
+        window.deleteEntry = deleteEntry;
+
+        // Initialize
+        updateTotalAmounts();
+    </script>
+</body>
+</html>
