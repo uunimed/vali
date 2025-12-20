@@ -634,8 +634,8 @@
         
         .full-history-content {
             background: white;
-            width: 90%;
-            max-width: 900px;
+            width: 100%;
+            max-width: 99%;
             border-radius: 10px;
             overflow: hidden;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
@@ -1281,7 +1281,7 @@ async function addMoney() {
     personInput.value = '';
     descriptionInput.value = '';
 
-    showPopup('წარმატება', 'ვალი წარმატებით დაემატა');
+    showPopup('წარმატება', 'დავალიანება წარმატებით დაემატა');
 }
 
         
@@ -1343,7 +1343,7 @@ async function addMoney() {
                         <td>${formatDate(item.date)}</td>
                         <td>${currencySymbols[item.currency]}${item.amount.toFixed(2)}</td>
                         <td>${item.description || 'აღწერის გარეშე'}</td>
-                        <td>${item.returned ? 'დაბრუნდა' : 'ვალია'}</td>
+                        <td>${item.returned ? 'დაბრუნდა' : 'აქტიური დავალიანება'}</td>
                         <td>
                             <button class="btn delete-btn" onclick="deleteEntry('${item.id}')">წაშლა</button>
                         </td>
@@ -1383,7 +1383,7 @@ async function addMoney() {
                         <td class="amount-cell">${currencySymbols[entry.currency]}${entry.amount.toFixed(2)}</td>
                         <td>${entry.person}</td>
                         <td>${entry.description || '-'}</td>
-                        <td>${entry.returned ? 'დაბრუნდა' : 'ვალია'}</td>
+                        <td>${entry.returned ? 'დაბრუნდა' : 'აქტიური დავალიანება'}</td>
                         <td>
                             <div class="action-buttons">
                                 <button class="btn details-btn" onclick="showDetailsFromFullHistory('${entry.person}')">დეტალები</button>
@@ -1440,7 +1440,7 @@ async function addMoney() {
                 await saveData();
                 updateTotalAmounts();
                 showFullHistory();
-                showPopup('წარმატება', 'ვალი მონიშნულია როგორც დაბრუნებული');
+                showPopup('წარმატება', 'დავალიანება მონიშნულია როგორც დაბრუნებული');
             }
         }
         
