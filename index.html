@@ -1239,51 +1239,51 @@
             updateTotalAmounts();
         }
         
-        async function addMoney() {
-            const amount = parseFloat(amountInput.value);
-            const currency = currencySelect.value;
-            const person = personInput.value.trim();
-            const description = descriptionInput.value.trim();
-            
-            if (!amount || amount <= 0) {
-                showPopup('შეცდომა', 'შეიტანეთ სწორი თანხა');
-                return;
-            }
-            
-            if (!person) {
-                showPopup('შეცდომა', 'შეიყვანეთ მევალე');
-                return;
-            }
-            
-            const newEntry = {
-                id: Date.now().toString(),
-                amount: amount,
-                currency: currency,
-                person: person,
-                description: description,
-                date: new Date().toISOString().split('T')[0],
-                returned: false
-            };
-            
-            // If online, add to Firebase and get the real ID
-            if (isOnline) {
-                const firebaseId = await addMoneyToFirebase(newEntry);
-                if (firebaseId) {
-                    newEntry.id = firebaseId;
-                }
-            }
-            
-            moneyOwed.push(newEntry);
-            await saveData();
-            updateTotalAmounts();
-            
-            // Clear inputs
-            amountInput.value = '';
-            personInput.value = '';
-            descriptionInput.value = '';
-            
-            showPopup('წარმატება', 'ვალი წარმატებით დაემატა');
-        }
+async function addMoney() {
+    const amount = parseFloat(amountInput.value);
+    const currency = currencySelect.value;
+    const person = personInput.value.trim();
+    const description = descriptionInput.value.trim();
+    
+    if (!amount || amount <= 0) {
+        showPopup('შეცდომა', 'შეიტანეთ სწორი თანხა');
+        return;
+    }
+    
+    if (!person) {
+        showPopup('შეცდომა', 'შეიყვანეთ მევალე');
+        return;
+    }
+    
+    const newEntry = {
+        id: Date.now().toString(),
+        amount: amount,
+        currency: currency,
+        person: person,
+        description: description,
+        date: new Date().toISOString().split('T')[0],
+        returned: false
+    };
+
+    if (isOnline) {
+        // ✅ მხოლოდ Firebase
+        await addMoneyToFirebase(newEntry);
+    } else {
+        // ✅ მხოლოდ local
+        moneyOwed.push(newEntry);
+        await saveData();
+    }
+
+    updateTotalAmounts();
+
+    // Clear inputs
+    amountInput.value = '';
+    personInput.value = '';
+    descriptionInput.value = '';
+
+    showPopup('წარმატება', 'ვალი წარმატებით დაემატა');
+}
+
         
         function updateTotalAmounts() {
             let totalUSD = 0;
