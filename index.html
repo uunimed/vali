@@ -58,7 +58,140 @@
     padding: 0; /* Changed from 20px to 0 */
 }
 
-        
+        /* Print Button Style */
+#print-history-btn {
+    background: #2c3e50;
+    margin-left: 10px;
+}
+
+#print-history-btn:hover {
+    background: #1a252f;
+}
+
+/* Modern Print Styles */
+@media print {
+    body * {
+        visibility: hidden;
+    }
+    
+    .print-section, .print-section * {
+        visibility: visible;
+    }
+    
+    .print-section {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        padding: 40px;
+        font-family: 'Segoe UI', 'Arial', sans-serif;
+        background: white;
+    }
+    
+    .no-print {
+        display: none !important;
+    }
+    
+    .print-header {
+        text-align: center;
+        margin-bottom: 40px;
+        padding-bottom: 25px;
+        border-bottom: 3px solid #6a11cb;
+    }
+    
+    .print-header h1 {
+        color: #6a11cb !important;
+        font-size: 28px;
+        margin-bottom: 15px;
+        font-weight: 700;
+    }
+    
+    .print-header p {
+        margin: 8px 0;
+        font-size: 16px;
+        color: #666;
+    }
+    
+    .print-info {
+        margin-bottom: 35px;
+        background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+        padding: 20px;
+        border-radius: 10px;
+        border: 1px solid #e9ecef;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+    }
+    
+    .print-info-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 12px;
+        font-size: 15px;
+        padding: 8px 0;
+        border-bottom: 1px dashed #e9ecef;
+    }
+    
+    .print-info-row:last-child {
+        border-bottom: none;
+    }
+    
+    .print-info-row strong {
+        color: #333;
+        font-weight: 600;
+    }
+    
+    .print-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 25px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        border-radius: 8px;
+        overflow: hidden;
+    }
+    
+    .print-table th {
+        background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%) !important;
+        color: white !important;
+        font-weight: 600;
+        padding: 14px 16px;
+        text-align: left;
+        font-size: 15px;
+        border: none;
+    }
+    
+    .print-table td {
+        padding: 12px 16px;
+        border-bottom: 1px solid #f1f3f5;
+        text-align: left;
+        font-size: 14px;
+    }
+    
+    .print-table tr:nth-child(even) {
+        background-color: #f8f9fa;
+    }
+    
+    .print-table tr:hover {
+        background-color: #f1f3f5;
+    }
+    
+    .print-total {
+        margin-top: 40px;
+        padding: 20px;
+        background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+        color: white;
+        border-radius: 10px;
+        text-align: center;
+        font-weight: 600;
+        font-size: 18px;
+    }
+    
+    .currency-highlight {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 8px 15px;
+        border-radius: 5px;
+        margin: 0 5px;
+    }
+}
+
         /* Login Page Styles */
         #login-page {
             display: flex;
@@ -695,11 +828,11 @@
             <button id="add-money-btn" class="btn add-money-btn">დამატება</button>
         </div>
         
-        <div class="history-section">
-            <h3>სრული ისტორია</h3>
-            <button id="open-full-history-btn" class="btn">გახსენი სრული ისტორია</button>
-        </div>
-    </div>
+<div class="history-section">
+    <h3>სრული ისტორია</h3>
+    <button id="open-full-history-btn" class="btn">გახსენი სრული ისტორია</button>
+</div>
+
     
     <!-- Details Modal -->
     <div id="details-modal" class="modal">
@@ -731,39 +864,44 @@
         </div>
     </div>
     
-    <!-- Full History Modal -->
-    <div id="full-history-modal" class="full-history-modal">
-        <div class="full-history-content">
-            <div class="full-history-header">
-                <h3>სრული ისტორია</h3>
-                <button class="close-btn">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
-                    </svg>
-                </button>
+<!-- Full History Modal -->
+<div id="full-history-modal" class="full-history-modal">
+    <div class="full-history-content">
+        <div class="full-history-header">
+            <h3>სრული ისტორია</h3>
+            <button class="close-btn">
+                <svg viewBox="0 0 24 24">
+                    <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                </svg>
+            </button>
+        </div>
+        <div class="full-history-body">
+            <div class="full-history-total">
+                <span id="full-history-total-amount">სრული: $0.00, €0.00, ₾0.00</span>
             </div>
-            <div class="full-history-body">
-                <div class="full-history-total">
-                    <span id="full-history-total-amount">სრული: $0.00, €0.00, ₾0.00</span>
-                </div>
-                <table class="full-history-table">
-                    <thead>
-                        <tr>
-                            <th>თარიღი</th>
-                            <th>თანხა</th>
-                            <th>პიროვნება</th>
-                            <th>აღწერა</th>
-                            <th>სტატუსი</th>
-                            <th>ქმედება</th>
-                        </tr>
-                    </thead>
-                    <tbody id="full-history-table-body">
-                        <!-- Table rows will be added here dynamically -->
-                    </tbody>
-                </table>
+            <table class="full-history-table">
+                <thead>
+                    <tr>
+                        <th>თარიღი</th>
+                        <th>თანხა</th>
+                        <th>პიროვნება</th>
+                        <th>აღწერა</th>
+                        <th>სტატუსი</th>
+                        <th>ქმედება</th>
+                    </tr>
+                </thead>
+                <tbody id="full-history-table-body">
+                    <!-- Table rows will be added here dynamically -->
+                </tbody>
+            </table>
+            
+            <!-- Add this print button at the bottom -->
+            <div style="text-align: left; margin-top: 20px;">
+                <button id="print-full-history-btn" class="btn" style="background: #2c3e50;">ბეჭდვა</button>
             </div>
         </div>
     </div>
+</div>
     
     <!-- Custom Popup -->
     <div id="custom-popup" class="custom-popup">
@@ -813,11 +951,14 @@
         const popupMessage = document.getElementById('popup-message');
         let popupOkBtn = document.getElementById('popup-ok-btn');
         const syncStatus = document.getElementById('sync-status');
+        const popupCloseBtn = document.querySelector('.popup-close-btn');
+        const printFullHistoryBtn = document.getElementById('print-full-history-btn');
         
         // State
         let moneyOwed = JSON.parse(localStorage.getItem('moneyOwed')) || [];
         let currentUser = localStorage.getItem('currentUser');
         let isOnline = false;
+        let hasFirebaseListener = false; // Flag to track Firebase listener
         
         // Currency symbols
         const currencySymbols = {
@@ -838,6 +979,11 @@
         addMoneyBtn.addEventListener('click', addMoney);
         openFullHistoryBtn.addEventListener('click', showFullHistory);
         
+        // Print button event listener
+        if (printFullHistoryBtn) {
+            printFullHistoryBtn.addEventListener('click', printHistory);
+        }
+        
         closeModalBtns.forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const modal = e.target.closest('.modal, .full-history-modal');
@@ -847,9 +993,11 @@
             });
         });
         
-        popupCloseBtn.addEventListener('click', () => {
-            hideModal(customPopup);
-        });
+        if (popupCloseBtn) {
+            popupCloseBtn.addEventListener('click', () => {
+                hideModal(customPopup);
+            });
+        }
         
         // Close modal when clicking outside
         window.addEventListener('click', (e) => {
@@ -888,33 +1036,45 @@
                         throw testError;
                     }
                     
-                    // Set up real-time listener for debts
-                    const debtsRef = window.database.ref('debts');
-                    debtsRef.on('value', (snapshot) => {
-                        console.log('Firebase data received:', snapshot.val());
-                        const data = snapshot.val();
-                        moneyOwed = [];
-                        if (data) {
-                            Object.keys(data).forEach(key => {
-                                moneyOwed.push({
-                                    id: key,
-                                    ...data[key]
-                                });
-                            });
-                        } else {
-                            console.log('No data in Firebase');
-                        }
-                        updateTotalAmounts();
-                        showPopup('სინქრონიზაცია', 'მონაცემები განახლდა');
-                    }, (error) => {
-                        console.error('Firebase listener error:', error);
-                        isOnline = false;
-                        syncStatus.textContent = 'Offline';
-                        syncStatus.className = 'sync-status sync-offline';
-                    });
-                    
-                    // Load initial data from Firebase
+                    // Load initial data from Firebase first
                     await loadDataFromFirebase();
+                    
+                    // Only set up real-time listener if not already set up
+                    if (!hasFirebaseListener) {
+                        const debtsRef = window.database.ref('debts');
+                        debtsRef.on('value', (snapshot) => {
+                            console.log('Firebase real-time update received');
+                            const data = snapshot.val();
+                            if (data) {
+                                // Process data only if it's different from current
+                                const newData = [];
+                                Object.keys(data).forEach(key => {
+                                    newData.push({
+                                        id: key,
+                                        ...data[key]
+                                    });
+                                });
+                                
+                                // Check if data actually changed
+                                const currentString = JSON.stringify(moneyOwed.sort((a,b) => a.id.localeCompare(b.id)));
+                                const newString = JSON.stringify(newData.sort((a,b) => a.id.localeCompare(b.id)));
+                                
+                                if (currentString !== newString) {
+                                    moneyOwed = newData;
+                                    localStorage.setItem('moneyOwed', JSON.stringify(moneyOwed));
+                                    updateTotalAmounts();
+                                    showPopup('სინქრონიზაცია', 'მონაცემები განახლდა');
+                                }
+                            }
+                        }, (error) => {
+                            console.error('Firebase listener error:', error);
+                            isOnline = false;
+                            syncStatus.textContent = 'Offline';
+                            syncStatus.className = 'sync-status sync-offline';
+                        });
+                        hasFirebaseListener = true;
+                    }
+                    
                     return true;
                 } else {
                     throw new Error('Firebase not loaded');
@@ -938,15 +1098,16 @@
                 const data = snapshot.val();
                 console.log('Firebase data loaded:', data);
                 
-                moneyOwed = [];
                 if (data) {
+                    moneyOwed = [];
                     Object.keys(data).forEach(key => {
                         moneyOwed.push({
                             id: key,
                             ...data[key]
                         });
                     });
-                    console.log('Processed moneyOwed:', moneyOwed);
+                    console.log('Processed moneyOwed:', moneyOwed.length, 'items');
+                    localStorage.setItem('moneyOwed', JSON.stringify(moneyOwed));
                 } else {
                     console.log('No data found in Firebase');
                     // If no data in Firebase, push local data to Firebase
@@ -956,8 +1117,6 @@
                     }
                 }
                 
-                // Save to localStorage as backup
-                localStorage.setItem('moneyOwed', JSON.stringify(moneyOwed));
                 updateTotalAmounts();
             } catch (error) {
                 console.error('Error loading from Firebase:', error);
@@ -1050,6 +1209,132 @@
             }
         }
         
+        // Print function for history
+        function printHistory() {
+            // Create print section
+            const printSection = document.createElement('div');
+            printSection.className = 'print-section';
+            
+            // Calculate totals once
+            const totalUSD = calculateTotalByCurrency('USD');
+            const totalEUR = calculateTotalByCurrency('EUR');
+            const totalGEL = calculateTotalByCurrency('GEL');
+            
+            printSection.innerHTML = `
+                <div class="print-header">
+                    <h1>დავალიანების ანგარიში</h1>
+                    <p>ბეჭდვის თარიღი: ${new Date().toLocaleDateString('ka-GE')}</p>
+                    <p>სისტემიდან ექსპორტი</p>
+                </div>
+                
+                <div class="print-info">
+                    <div class="print-info-row">
+                        <strong>ჩანაწერების რაოდენობა:</strong>
+                        <span>${moneyOwed.length}</span>
+                    </div>
+                    <div class="print-info-row">
+                        <strong>აქტიური ვალები:</strong>
+                        <span>${moneyOwed.filter(e => !e.returned).length}</span>
+                    </div>
+                    <div class="print-info-row">
+                        <strong>დაბრუნებული ვალები:</strong>
+                        <span>${moneyOwed.filter(e => e.returned).length}</span>
+                    </div>
+                </div>
+                
+                <table class="print-table">
+                    <thead>
+                        <tr>
+                            <th>შეტანის თარიღი</th>
+                            <th>თანხა</th>
+                            <th>პიროვნება</th>
+                            <th>აღწერა</th>
+                            <th>სტატუსი</th>
+                            <th>ჯამი (პიროვნების მიხედვით)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="print-table-body">
+                    </tbody>
+                </table>
+                
+                <div class="print-total" id="print-total">
+                    <div>მთლიანი აქტიური ვალი: 
+                        <span class="currency-highlight">$${totalUSD.toFixed(2)}</span> | 
+                        <span class="currency-highlight">€${totalEUR.toFixed(2)}</span> | 
+                        <span class="currency-highlight">₾${totalGEL.toFixed(2)}</span>
+                    </div>
+                </div>
+            `;
+            
+            // Add rows to print table
+            const printTableBody = printSection.querySelector('#print-table-body');
+            
+            // Sort by date (newest first)
+            const sortedEntries = [...moneyOwed].sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            // Calculate sums by person for the last column
+            const sumsByPerson = {};
+            sortedEntries.forEach(entry => {
+                if (!entry.returned) {
+                    if (!sumsByPerson[entry.person]) {
+                        sumsByPerson[entry.person] = {};
+                    }
+                    if (!sumsByPerson[entry.person][entry.currency]) {
+                        sumsByPerson[entry.person][entry.currency] = 0;
+                    }
+                    sumsByPerson[entry.person][entry.currency] += entry.amount;
+                }
+            });
+            
+            sortedEntries.forEach(entry => {
+                const row = document.createElement('tr');
+                
+                // Format sum string for this person
+                let sumString = '';
+                if (sumsByPerson[entry.person]) {
+                    const sums = sumsByPerson[entry.person];
+                    const parts = [];
+                    if (sums.USD) parts.push(`$${sums.USD.toFixed(2)}`);
+                    if (sums.EUR) parts.push(`€${sums.EUR.toFixed(2)}`);
+                    if (sums.GEL) parts.push(`₾${sums.GEL.toFixed(2)}`);
+                    sumString = parts.join(' | ');
+                }
+                
+                row.innerHTML = `
+                    <td>${formatDate(entry.date)}</td>
+                    <td><strong>${currencySymbols[entry.currency]}${entry.amount.toFixed(2)}</strong></td>
+                    <td>${entry.person}</td>
+                    <td>${entry.description || '-'}</td>
+                    <td>${entry.returned ? 'დაბრუნდა' : 'ვალია'}</td>
+                    <td>${sumString || '-'}</td>
+                `;
+                
+                if (entry.returned) {
+                    row.style.opacity = '0.7';
+                }
+                
+                printTableBody.appendChild(row);
+            });
+            
+            // Add to body
+            document.body.appendChild(printSection);
+            
+            // Print
+            window.print();
+            
+            // Remove print section after printing
+            setTimeout(() => {
+                document.body.removeChild(printSection);
+            }, 100);
+        }
+
+        // Helper function to calculate total by currency
+        function calculateTotalByCurrency(currency) {
+            return moneyOwed
+                .filter(entry => !entry.returned && entry.currency === currency)
+                .reduce((sum, entry) => sum + entry.amount, 0);
+        }
+
         async function deleteMoneyFromFirebase(id) {
             if (!isOnline) return;
             
@@ -1122,15 +1407,25 @@
                 returned: false
             };
             
+            console.log('Adding new entry:', newEntry);
+            
+            // First add to local array
+            moneyOwed.push(newEntry);
+            
             // If online, add to Firebase and get the real ID
             if (isOnline) {
                 const firebaseId = await addMoneyToFirebase(newEntry);
                 if (firebaseId) {
+                    // Update the ID with Firebase ID
                     newEntry.id = firebaseId;
+                    // Update the entry in the array
+                    const index = moneyOwed.findIndex(e => e.id === Date.now().toString());
+                    if (index !== -1) {
+                        moneyOwed[index].id = firebaseId;
+                    }
                 }
             }
             
-            moneyOwed.push(newEntry);
             await saveData();
             updateTotalAmounts();
             
@@ -1226,8 +1521,18 @@
                     </tr>
                 `;
             } else {
-                // Sort by date (newest first)
-                const sortedEntries = [...moneyOwed].sort((a, b) => new Date(b.date) - new Date(a.date));
+                // Sort by date (newest first) - REMOVE DUPLICATES
+                const uniqueEntries = [];
+                const seenIds = new Set();
+                
+                moneyOwed.forEach(entry => {
+                    if (!seenIds.has(entry.id)) {
+                        seenIds.add(entry.id);
+                        uniqueEntries.push(entry);
+                    }
+                });
+                
+                const sortedEntries = uniqueEntries.sort((a, b) => new Date(b.date) - new Date(a.date));
                 
                 sortedEntries.forEach(entry => {
                     const row = document.createElement('tr');
