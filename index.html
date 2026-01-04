@@ -220,6 +220,41 @@
             margin-bottom: 20px;
         }
         
+        /* Add this to your existing CSS */
+/* Add this to your CSS */
+.minus-btn {
+    background: #ffa502;
+    padding: 6px 12px;
+    font-size: 14px;
+    font-weight: bold; /* Make it bold like other buttons */
+    letter-spacing: 0.5px; /* Add some letter spacing */
+}
+
+.minus-btn:hover {
+    background: #e59400;
+}
+
+/* Update all button styles to be consistent */
+.details-btn, .returned-btn, .delete-btn, .minus-btn {
+    background: #3498db; /* Default color, will be overridden for each button */
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 500; /* Make all buttons medium weight */
+    letter-spacing: 0.3px;
+    text-align: center;
+    min-width: 80px;
+}
+
+/* Specific colors for each button */
+.details-btn { background: #3498db; }
+.returned-btn { background: #27ae60; }
+.delete-btn { background: #ff4757; }
+.minus-btn { 
+    background: #ffa502;
+    font-size: 14px !important; /* Force same font size */
+}
+
+
         .form-group label {
             display: block;
             margin-bottom: 8px;
@@ -898,6 +933,7 @@
         </div>
     </div>
     
+
     <!-- Custom Popup -->
     <div id="custom-popup" class="custom-popup">
         <div class="popup-content">
@@ -918,6 +954,35 @@
         </div>
     </div>
     
+    
+    <!-- Minus Modal -->
+<div id="minus-modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>თანხის გამოკლება</h3>
+            <button class="close-btn">
+                <svg viewBox="0 0 24 24">
+                    <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                </svg>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label for="minus-amount">გამოსაკლებელი თანხა</label>
+                <input type="number" id="minus-amount" placeholder="შეიყვანეთ თანხა">
+            </div>
+            <div class="form-group">
+                <label for="minus-description">მიზეზი (არასავალდებულო)</label>
+                <input type="text" id="minus-description" placeholder="მიზეზის მითითება">
+            </div>
+            <div class="form-group">
+                <p id="minus-current-info">მიმდინარე დავალიანება: <span id="minus-current-amount"></span></p>
+            </div>
+            <button id="confirm-minus-btn" class="btn">დადასტურება</button>
+        </div>
+    </div>
+</div>
+
     <script>
         // DOM Elements
         const loginPage = document.getElementById('login-page');
@@ -946,7 +1011,13 @@
         const popupMessage = document.getElementById('popup-message');
         let popupOkBtn = document.getElementById('popup-ok-btn');
         const syncStatus = document.getElementById('sync-status');
-        
+        const minusModal = document.getElementById('minus-modal');
+const minusAmountInput = document.getElementById('minus-amount');
+const minusDescriptionInput = document.getElementById('minus-description');
+const minusCurrentAmount = document.getElementById('minus-current-amount');
+const confirmMinusBtn = document.getElementById('confirm-minus-btn');
+let currentMinusEntry = null; // To track which entry we're modifying
+
         // State
         let moneyOwed = JSON.parse(localStorage.getItem('moneyOwed')) || [];
         let currentUser = localStorage.getItem('currentUser');
@@ -1339,15 +1410,20 @@ async function addMoney() {
                         row.classList.add('returned-row');
                     }
                     
-                    row.innerHTML = `
-                        <td>${formatDate(item.date)}</td>
-                        <td>${currencySymbols[item.currency]}${item.amount.toFixed(2)}</td>
-                        <td>${item.description || 'აღწერის გარეშე'}</td>
-                        <td>${item.returned ? 'დაბრუნდა' : 'აქტიური დავალიანება'}</td>
-                        <td>
-                            <button class="btn delete-btn" onclick="deleteEntry('${item.id}')">წაშლა</button>
-                        </td>
-                    `;
+// In showDetails() function, update the action buttons:
+row.innerHTML = `
+    <td>${formatDate(item.date)}</td>
+    <td>${currencySymbols[item.currency]}${item.amount.toFixed(2)}</td>
+    <td>${item.description || 'აღწერის გარეშე'}</td>
+    <td>${item.returned ? 'დაბრუნდა' : 'აქტიური დავალიანება'}</td>
+    <td>
+        ${!item.returned ? 
+            `<button class="btn minus-btn" onclick="openMinusModal('${item.id}')">გამოკლება</button>` : 
+            ''
+        }
+        <button class="btn delete-btn" onclick="deleteEntry('${item.id}')">წაშლა</button>
+    </td>
+`;
                     
                     detailsTableBody.appendChild(row);
                 });
@@ -1356,6 +1432,106 @@ async function addMoney() {
             showModal(detailsModal);
         }
         
+function openMinusModal(id) {
+    currentMinusEntry = moneyOwed.find(item => item.id === id);
+    
+    if (!currentMinusEntry) {
+        showPopup('შეცდომა', 'ჩანაწერი ვერ მოიძებნა');
+        return;
+    }
+    
+    if (currentMinusEntry.returned) {
+        showPopup('შეცდომა', 'დაბრუნებული დავალიანებიდან თანხის გამოკლება შეუძლებელია');
+        return;
+    }
+    
+    // Display current amount
+    minusCurrentAmount.textContent = `${currencySymbols[currentMinusEntry.currency]}${currentMinusEntry.amount.toFixed(2)}`;
+    
+    // Clear inputs
+    minusAmountInput.value = '';
+    minusDescriptionInput.value = '';
+    
+    // Hide any open modal first
+    if (detailsModal.style.display === 'flex') {
+        hideModal(detailsModal);
+    }
+    if (fullHistoryModal.style.display === 'flex') {
+        hideModal(fullHistoryModal);
+    }
+    
+    // Show minus modal after a short delay
+    setTimeout(() => {
+        showModal(minusModal);
+    }, 50);
+}
+
+// Add event listener for the confirm minus button
+confirmMinusBtn.addEventListener('click', handleMinusAmount);
+
+async function handleMinusAmount() {
+    const minusAmount = parseFloat(minusAmountInput.value);
+    const minusDescription = minusDescriptionInput.value.trim();
+    
+    if (!minusAmount || minusAmount <= 0) {
+        showPopup('შეცდომა', 'შეიტანეთ სწორი თანხა');
+        return;
+    }
+    
+    if (minusAmount > currentMinusEntry.amount) {
+        showPopup('შეცდომა', 'გამოსაკლებელი თანხა აღემატება დავალიანებას');
+        return;
+    }
+    
+    // Update the original entry amount
+    const originalDescription = currentMinusEntry.description || '';
+    const reasonText = minusDescription ? ` (გამოკლების მიზეზი: ${minusDescription})` : '';
+    currentMinusEntry.description = `${originalDescription}${reasonText}`;
+    
+    currentMinusEntry.amount -= minusAmount;
+    
+    // If amount becomes 0, mark as returned
+    if (currentMinusEntry.amount <= 0) {
+        currentMinusEntry.returned = true;
+        currentMinusEntry.amount = 0;
+    }
+    
+    // Update in Firebase
+    await updateMoneyInFirebase(currentMinusEntry.id, {
+        amount: currentMinusEntry.amount,
+        description: currentMinusEntry.description,
+        returned: currentMinusEntry.returned
+    });
+    
+    // Save changes
+    await saveData();
+    
+    // Update totals and close modal
+    updateTotalAmounts();
+    hideModal(minusModal);
+    
+    // Show which modal was open before
+    showPopup('წარმატება', `თანხა წარმატებით გამოიკლდა. დარჩენილი დავალიანება: ${currencySymbols[currentMinusEntry.currency]}${currentMinusEntry.amount.toFixed(2)}`, () => {
+        // After popup closes, reopen the previous view
+        if (fullHistoryModal.style.display === 'none' && detailsModal.style.display === 'none') {
+            // If neither modal is open, open full history
+            showFullHistory();
+        }
+    });
+}
+
+// Add close functionality for minus modal
+minusModal.querySelector('.close-btn').addEventListener('click', () => {
+    hideModal(minusModal);
+});
+
+// Also make sure the minus modal closes when clicking outside
+window.addEventListener('click', (e) => {
+    if (e.target === minusModal) {
+        hideModal(minusModal);
+    }
+});
+
         function showFullHistory() {
             // Clear previous table data
             fullHistoryTableBody.innerHTML = '';
@@ -1378,23 +1554,24 @@ async function addMoney() {
                         row.classList.add('returned-row');
                     }
                     
-                    row.innerHTML = `
-                        <td>${formatDate(entry.date)}</td>
-                        <td class="amount-cell">${currencySymbols[entry.currency]}${entry.amount.toFixed(2)}</td>
-                        <td>${entry.person}</td>
-                        <td>${entry.description || '-'}</td>
-                        <td>${entry.returned ? 'დაბრუნდა' : 'აქტიური დავალიანება'}</td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="btn details-btn" onclick="showDetailsFromFullHistory('${entry.person}')">დეტალები</button>
-                                ${!entry.returned ? 
-                                    `<button class="btn returned-btn" onclick="markAsReturned('${entry.id}')">დაბრუნდა</button>` : 
-                                    ''
-                                }
-                                <button class="btn delete-btn" onclick="deleteEntry('${entry.id}')">წაშლა</button>
-                            </div>
-                        </td>
-                    `;
+row.innerHTML = `
+    <td>${formatDate(entry.date)}</td>
+    <td class="amount-cell">${currencySymbols[entry.currency]}${entry.amount.toFixed(2)}</td>
+    <td>${entry.person}</td>
+    <td>${entry.description || '-'}</td>
+    <td>${entry.returned ? 'დაბრუნდა' : 'აქტიური დავალიანება'}</td>
+    <td>
+        <div class="action-buttons">
+            <button class="btn details-btn" onclick="showDetailsFromFullHistory('${entry.person}')">დეტალები</button>
+            ${!entry.returned ? 
+                `<button class="btn minus-btn" onclick="openMinusModal('${entry.id}')">გამოკლება</button>
+                 <button class="btn returned-btn" onclick="markAsReturned('${entry.id}')">დაბრუნდა</button>` : 
+                ''
+            }
+            <button class="btn delete-btn" onclick="deleteEntry('${entry.id}')">წაშლა</button>
+        </div>
+    </td>
+`;
                     
                     fullHistoryTableBody.appendChild(row);
                 });
@@ -1509,6 +1686,7 @@ async function addMoney() {
         window.showDetailsFromFullHistory = showDetailsFromFullHistory;
         window.markAsReturned = markAsReturned;
         window.deleteEntry = deleteEntry;
+window.openMinusModal = openMinusModal;
 
         // Initialize
         updateTotalAmounts();
